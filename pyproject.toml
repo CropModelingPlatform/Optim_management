@@ -1,0 +1,20 @@
+
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[tool.portray]
+name = "optim_sowingdate"
+description = "A package to optimize sowing date from estimated yield time series"
+version = "0.1.0"
+authors = ["LIMA"]
+modules = ["optim_sowingdate"]
+
+[tool.portray.mkdocs.theme]
+name = "readthedocs"
+palette = {primary = "green", accent = "pink"}
+
+[tool.portray.mkdocs.theme.icon]
+repo='fontawesome/brands/gitlab'
+
+[[tool.portray.mkdocs.nav]]
+Home = "README.md"
