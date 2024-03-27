@@ -6,16 +6,9 @@ import sys
 import pandas as pd
 
 
-def main():
-    if len(sys.argv) <  3:
-        print ("Usage: optimSow <modeloutput> <outname>\n")
-        print ("\t -- modeloutput is a folder containing the list of model outputs\n")
-        print ("\t -- outname is the name of the optimize sowing date raster\n")
-        sys.exit()
-    
+def optimize(modeloutput, outputName):
+
     ranking = 6
-    modeloutput = sys.argv[1]
-    outputName = sys.argv[2]
     sowing_dates = list(range(10, 361, 10))
 
     print("dssat comb")
@@ -208,6 +201,5 @@ def sw_date_optimization(da_y, da_cv, ranking):
         
     return result_df_1, result_df_2
 
-if __name__ == '__main__':
-    main()
+
 

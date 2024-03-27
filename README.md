@@ -1,4 +1,4 @@
-# Optima sowing dates estimation
+# Optimal sowing dates estimation
 
 Just a part of code from Argeo but need to review the estimation approach
 
@@ -15,9 +15,14 @@ Just a part of code from Argeo but need to review the estimation approach
 conda create --name gced python=3.9
 conda activate gced
 conda install pip
-pip install -r requirements.txt
+pip install -e .
 ```
 
 3. Usage
 
-It supposed that you yave estimated yield netcdf files for the models STICS, DSSAT and Celsius in a same folder from the LIMA platform. We call the absolute path of this folder "ModelOutput". 
+It supposed that you yave yield netcdf files for the models STICS, DSSAT and Celsius in a same folder, estimated thanks to the LIMA platform. We named the absolute path of this folder "ModelOutput", and the prefix of the result.
+
+```bash
+optim_sowingdate optimize <ModelOutput> <prefix>
+```
+Results will be generated on your current repository.

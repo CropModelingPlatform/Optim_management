@@ -3,11 +3,23 @@
 requires = ["setuptools", "wheel"]
 
 [tool.portray]
+modules = ["optim_sowingdate"]
+
+[project]
 name = "optim_sowingdate"
 description = "A package to optimize sowing date from estimated yield time series"
-version = "0.1.0"
-authors = ["LIMA"]
-modules = ["optim_sowingdate"]
+version = "1.1.0"
+authors = [{ name="LIMA", email="cyrille_ahmed.midingoyi@cirad.fr" },]
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/cropmodelingplatform/Optima_sowingDate"
+documentation = "https://Optima_sowingDate.readthedocs.io"
 
 [tool.portray.mkdocs.theme]
 name = "readthedocs"
@@ -18,3 +30,15 @@ repo='fontawesome/brands/gitlab'
 
 [[tool.portray.mkdocs.nav]]
 Home = "README.md"
+
+[options]
+install_requires = [
+    "pandas",
+    "PyYAML",
+    "xarray",
+    "netCDF4",
+    "numpy"
+]
+
+[project.scripts]
+optim_sowingdate = "optim_sowingdate.cmd:cli"
