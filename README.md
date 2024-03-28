@@ -15,6 +15,7 @@ Just a part of code from Argeo but need to review the estimation approach
 conda create --name gced python=3.9
 conda activate gced
 conda install pip
+pip install -r requirements.txt
 pip install -e .
 ```
 
