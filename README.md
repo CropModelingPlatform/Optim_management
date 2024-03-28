@@ -24,6 +24,6 @@ pip install -e .
 It supposed that you yave yield netcdf files for the models STICS, DSSAT and Celsius in a same folder, estimated thanks to the LIMA platform. We named the absolute path of this folder "ModelOutput", and the prefix of the result.
 
 ```bash
-optim_sowingdate optimize <ModelOutput> <prefix>
+optim_sowingdate optim <ModelOutput> <prefix>
 ```
 Results will be generated on your current repository.
