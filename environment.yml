@@ -9,3 +9,4 @@ dependencies:
   - pandas
   - netCDF4
   - click
+  - flake8
