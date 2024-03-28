@@ -27,4 +27,5 @@ xarray
 pathlib
 pandas
 netCDF4
+click
 
