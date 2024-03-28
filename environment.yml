@@ -1,9 +1,9 @@
 name: optim_sowingdate
 channels:
-  - defaults
   - conda-forge
 dependencies:
-  - python=3.9
+  - pip
+  - python=3.10
   - numpy
   - xarray
   - pathlib
