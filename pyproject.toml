@@ -17,6 +17,13 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.9"
 pytest-cov = "^5.0.0"
+numpy = "^1.26.4"
+xarray = "^2024.2.0"
+pathlib = "^1.0.1"
+pandas  = "^2.2.1"
+netCDF4 = "^1.6.5"
+click  = "^8.1.7"
+
 
 [project.urls]
 Homepage = "https://github.com/cropmodelingplatform/Optima_sowingDate"
@@ -31,15 +38,6 @@ repo='fontawesome/brands/gitlab'
 
 [[tool.portray.mkdocs.nav]]
 Home = "README.md"
-
-[options]
-install_requires = [
-    "pandas",
-    "PyYAML",
-    "xarray",
-    "netCDF4",
-    "numpy"
-]
 
 [project.scripts]
 optim_sowingdate = "optim_sowingdate.cmd:cli"
