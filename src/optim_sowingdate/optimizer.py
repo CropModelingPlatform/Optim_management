@@ -6,7 +6,12 @@ import sys
 import pandas as pd
 
 
-def optimize(modeloutput, outputName):
+def optimize(modeloutput, resultpath):
+    """Optimize sowing date for given models
+    Args:
+        modeloutput (Path):the path of the folder containing the model outputs
+        resultpath (Path): resultpath: the path of the folder where sowing date netcdf files will be saved
+    """
 
     ranking = 6
     sowing_dates = list(range(10, 361, 10))
@@ -46,7 +51,7 @@ def optimize(modeloutput, outputName):
         opt_sw = opt_sw.set_index(['lat', 'lon']) # set lat and lon as indeces
         result_da = opt_sw.to_xarray() # works with xarray v 0.19.0
         print(f"finished {key}")
-        result_da.to_netcdf(outputName+"_"+key+".nc")
+        result_da.to_netcdf(os.path.join(resultpath,key+".nc"))
         ds.close()
 
 

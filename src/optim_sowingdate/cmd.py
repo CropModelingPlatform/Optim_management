@@ -15,14 +15,14 @@ def cli():
 @click.command("optim")
 @click.argument("modelout")
 @click.argument("prefix")
-def cmd_optimize(modelout, prefix):
+def cmd_optimize(modelout, resultpath):
     """Optimize sowing date for given model outputs.
 
     
-    modelout: the folder containing the model outputs
-    prefix: the prefix for the output file
+    modelout: the path of the folder containing the model outputs
+    resultpath: the path of the folder where sowing date netcdf files will be saved
     """
-    optimize(modelout, prefix)
+    optimize(modelout, resultpath)
 
 cli.add_command(cmd_optimize)
 
