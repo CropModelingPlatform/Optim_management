@@ -13,9 +13,6 @@ authors = ["LIMA CIRAD <cyrille_ahmed.midingoyi@cirad.fr>"]
 license = "MIT"
 maintainers = ["LIMA CIRAD <cyrille_ahmed.midingoyi@cirad.fr>"]
 readme = "README.md"
-packages = [
-    { include = "optim_sowingdate" }
-]
 
 
 [project.urls]
