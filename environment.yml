@@ -2,12 +2,4 @@ name: optim_sowingdate
 channels:
   - conda-forge
 dependencies:
-  - pip
-  - numpy
-  - xarray
-  - pathlib
-  - pandas
-  - netCDF4
-  - click
   - flake8
-  - pytest
