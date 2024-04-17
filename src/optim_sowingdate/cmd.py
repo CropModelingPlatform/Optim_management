@@ -14,7 +14,7 @@ def cli():
 
 @click.command("optim")
 @click.argument("modelout")
-@click.argument("prefix")
+@click.argument("resultpath")
 def cmd_optimize(modelout, resultpath):
     """Optimize sowing date for given model outputs.
     
