@@ -5,6 +5,15 @@ requires = ["setuptools", "wheel"]
 [tool.portray]
 modules = ["optim_sowingdate"]
 
+[project]
+name = "optim_sowingdate"
+description = "A package to optimize sowing date from estimated yield time series"
+version = "1.1.0"
+authors = [
+  {name = "tto", email = "author@example.com" }
+]
+license = {file = "LICENSE.txt"}
+
 [tool.poetry]
 name = "optim_sowingdate"
 description = "A package to optimize sowing date from estimated yield time series"
