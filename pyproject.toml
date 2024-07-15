@@ -8,20 +8,41 @@ modules = ["optim_sowingdate"]
 [project]
 name = "optim_sowingdate"
 description = "A package to optimize sowing date from estimated yield time series"
+requires-python = ">=3.9"
+readme = "README.md"
 version = "1.1.0"
 authors = [
-  {name = "tto", email = "author@example.com" }
+  {name = "Cyrille MIDINGOYI", email = "cyrille_ahmed.midingoyi@cirad.fr" },
+  {name = "Argeo ULRICH"}
 ]
 license = {file = "LICENSE.txt"}
+maintainers = [
+  {name = "Cyrille MIDINGOYI", email = "cyrille_ahmed.midingoyi@cirad.fr" }
+]
 
-[tool.poetry]
-name = "optim_sowingdate"
-description = "A package to optimize sowing date from estimated yield time series"
-version = "1.1.0"
-authors = ["LIMA CIRAD <cyrille_ahmed.midingoyi@cirad.fr>"]
-license = "MIT"
-maintainers = ["LIMA CIRAD <cyrille_ahmed.midingoyi@cirad.fr>"]
-readme = "README.md"
+classifiers = [
+  # How mature is this project? Common values are
+  #   3 - Alpha
+  #   4 - Beta
+  #   5 - Production/Stable
+  "Development Status :: 3 - Alpha",
+
+  # Indicate who your project is intended for
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+
+  # Pick your license as you wish
+  "License :: OSI Approved :: MIT License",
+
+  # Specify the Python versions you support here. In particular, ensure
+  # that you indicate you support Python 3. These classifiers are *not*
+  # checked by "pip install". See instead "requires-python" key in this file.
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3 :: Only",
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
