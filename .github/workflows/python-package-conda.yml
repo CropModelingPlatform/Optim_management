@@ -43,5 +43,5 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
-          pytest --cov=optim_sowingdate --cov-report html --verbose
+          pytest --cov optim_sowingdate --cov-report html --verbose
           coveralls
