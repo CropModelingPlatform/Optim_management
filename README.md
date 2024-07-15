@@ -22,10 +22,9 @@ Just a part of code from Argeo but need to review the estimation approach
 
 ### Usage
 
-It supposed that you yave yield netcdf files for the models STICS, DSSAT and Celsius in a same folder, estimated thanks to the LIMA platform. We named the absolute path of this folder "ModelOutput", and "resultPath" the path of the result.
+It supposed that you have the netcdf files outputs for the models STICS, DSSAT and Celsius in a same folder, estimated thanks to the LIMA platform. We named the absolute path of this folder "ModelOutput", and "resultPath" the path of the result.
 
         ```bash
         optim_sowingdate optim <ModelOutput> <resultPath>
         ```
 
-Results will be generated on your current repository.
