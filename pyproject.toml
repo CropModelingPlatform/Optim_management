@@ -9,7 +9,9 @@ modules = ["optim_sowingdate"]
 name = "optim_sowingdate"
 description = "A package to optimize sowing date from estimated yield time series"
 version = "1.1.0"
-authors = ["LIMA CIRAD <cyrille_ahmed.midingoyi@cirad.fr>"]
+authors = [
+  {name = "tto", email = "author@example.com" }
+]
 license = {file = "LICENSE.txt"}
 
 [tool.poetry]
