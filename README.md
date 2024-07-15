@@ -27,4 +27,3 @@ It supposed that you have the netcdf files outputs for the models STICS, DSSAT a
         ```bash
         optim_sowingdate optim <ModelOutput> <resultPath>
         ```
-
