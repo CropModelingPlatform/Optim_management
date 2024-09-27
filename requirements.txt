@@ -28,4 +28,6 @@ pathlib
 pandas
 netCDF4
 click
+pyogrio
+geopandas
 

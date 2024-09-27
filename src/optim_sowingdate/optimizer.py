@@ -20,26 +20,38 @@ def optimize(modeloutput, resultpath):
     dssat = dssat_s[0]
     sw = dssat_s[1]
     print("dssat concat")
-    combine_dssat = xr.concat(dssat, dim=pd.Index(sw, name="sowing_date"))
-
+    if dssat: 
+        combine_dssat = xr.concat(dssat, dim=pd.Index(sw, name="sowing_date"))
+    else: 
+        combine_dssat = None
     print("stics comb")
     stics_ = comb_data(sowing_dates,modeloutput, "stics")
     stics = stics_[0]
     sw = stics_[1]
     print("stics concat")
-    combine_stics = xr.concat(stics, dim=pd.Index(sw, name="sowing_date"))
-
+    if stics: 
+        combine_stics = xr.concat(stics, dim=pd.Index(sw, name="sowing_date"))
+    else: 
+        combine_stics = None
     print("celsius comb")
     celsius_ = comb_data(sowing_dates,modeloutput, "celsius")
     celsius = celsius_[0]
     sw = celsius_[1]
     print("celsius concat")
-    combine_celsius = xr.concat(celsius, dim=pd.Index(sw, name="sowing_date"))
-
+    if celsius: 
+        combine_celsius = xr.concat(celsius, dim=pd.Index(sw, name="sowing_date"))
+    else: 
+        combine_celsius = None
     print("all_dataset concat")
-    all_dataset = xr.concat([combine_dssat, combine_stics], dim="model").mean(dim="model")
+
+    datasets = [combine_dssat, combine_stics, combine_celsius]
+    valid_datasets = [ds for ds in datasets if ds is not None]
+    if valid_datasets:
+        all_dataset = xr.concat(valid_datasets, dim="model").mean(dim="model")
+    else:
+        raise "Aucun dataset valide pour la concaténation."
     
-    dataset = {"dssat":combine_dssat, "stics":combine_stics, "celsius":combine_celsius, "merge":all_dataset}
+    dataset = {"stics":combine_stics,  "merge":all_dataset}
     for key, ds in dataset.items():
         mean_yield_ds = mean_cv(ds)[0]
         cv_yield_ds = mean_cv(ds)[1]
@@ -70,7 +82,7 @@ def comb_data(sowing_dates, work_dir, model):
     sw = []
     for sowing_date in sowing_dates:
             
-       outfile = os.path.join(work_dir,f'{model}_yearly_MgtMais0_{sowing_date}_2.0.nc')
+       outfile = os.path.join(work_dir,f'{model}_yearly_MgtMil0_{sowing_date}_2.0.nc')
             
        if os.path.exists(outfile):
             sw.append(sowing_date)
