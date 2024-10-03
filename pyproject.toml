@@ -1,6 +1,7 @@
 
 [build-system]
 requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.portray]
 modules = ["optim_sowingdate"]
@@ -10,7 +11,7 @@ name = "optim_sowingdate"
 description = "A package to optimize sowing date from estimated yield time series"
 requires-python = ">=3.9"
 readme = "README.md"
-version = "1.1.0"
+version = "2.4.0"
 authors = [
   {name = "Cyrille MIDINGOYI", email = "cyrille_ahmed.midingoyi@cirad.fr" },
   {name = "Argeo ULRICH"}
@@ -18,6 +19,14 @@ authors = [
 license = {file = "LICENSE.txt"}
 maintainers = [
   {name = "Cyrille MIDINGOYI", email = "cyrille_ahmed.midingoyi@cirad.fr" }
+]
+dependencies = [
+  "numpy",
+  "xarray",
+  "pathlib",
+  "pandas",
+  "netCDF4",
+  "click"
 ]
 
 classifiers = [
@@ -56,12 +65,17 @@ click  = "^8.1.7"
 
 
 [project.urls]
-Homepage = "https://github.com/cropmodelingplatform/Optima_sowingDate"
-documentation = "https://Optima_sowingDate.readthedocs.io"
+Homepage = "https://github.com/cropmodelingplatform/Optim_sowingDate"
+documentation = "https://Optim_sowingDate.readthedocs.io"
+Repository = "https://github.com/CropModelingPlatform/Optim_sowingDate.git"
 
 [tool.portray.mkdocs.theme]
 name = "readthedocs"
 palette = {primary = "green", accent = "pink"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+#include = ["optim_sowingdate*"]
 
 [tool.portray.mkdocs.theme.icon]
 repo='fontawesome/brands/gitlab'
@@ -71,3 +85,4 @@ Home = "README.md"
 
 [project.scripts]
 optim_sowingdate = "optim_sowingdate.cmd:cli"
+
