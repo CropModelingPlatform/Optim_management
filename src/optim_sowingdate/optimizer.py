@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 
-def optimize(modeloutput, resultpath):
+def optimize(modeloutput, resultpath,start, end, step):
     """Optimize sowing date for given models
     Args:
         modeloutput (Path):the path of the folder containing the model outputs
@@ -13,7 +13,7 @@ def optimize(modeloutput, resultpath):
     """
 
     ranking = 6
-    sowing_dates = list(range(10, 361, 10))
+    sowing_dates = list(range(start, end+1, step))
 
     print("dssat comb")
     dssat_s = comb_data(sowing_dates,modeloutput, "dssat")
