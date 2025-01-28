@@ -11,7 +11,7 @@ name = "optim_sowingdate"
 description = "A package to optimize sowing date from estimated yield time series"
 requires-python = ">=3.9"
 readme = "README.md"
-version = "2.4.0"
+version = "2.6.0"
 authors = [
   {name = "Cyrille MIDINGOYI", email = "cyrille_ahmed.midingoyi@cirad.fr" },
   {name = "Argeo ULRICH"}

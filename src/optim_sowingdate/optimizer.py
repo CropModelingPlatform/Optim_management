@@ -3,6 +3,7 @@ import os
 import xarray as xr
 import numpy as np
 import pandas as pd
+from glob import glob
 
 
 def optimize(modeloutput, resultpath,start, end, step):
@@ -14,7 +15,7 @@ def optimize(modeloutput, resultpath,start, end, step):
 
     ranking = 6
     sowing_dates = list(range(start, end+1, step))
-
+    print("sowing_dates", sowing_dates)
     print("dssat comb")
     dssat_s = comb_data(sowing_dates,modeloutput, "dssat")
     dssat = dssat_s[0]
@@ -51,19 +52,24 @@ def optimize(modeloutput, resultpath,start, end, step):
     else:
         raise "Aucun dataset valide pour la concaténation."
     
-    dataset = {"stics":combine_stics,  "merge":all_dataset}
+    dataset = {"stics":combine_stics, "dssat":combine_dssat, "celsius":combine_dssat,  "merge":all_dataset}
     for key, ds in dataset.items():
-        mean_yield_ds = mean_cv(ds)[0]
-        cv_yield_ds = mean_cv(ds)[1]
-        da_y =  mean_yield_ds
-        da_cv = cv_yield_ds
-        res = sw_date_optimization(da_y, da_cv, ranking)
-        opt_sw = res[0][['lat', 'lon', 'sowing_date']]
-        opt_sw = opt_sw.set_index(['lat', 'lon']) # set lat and lon as indeces
-        result_da = opt_sw.to_xarray() # works with xarray v 0.19.0
-        print(f"finished {key}")
-        result_da.to_netcdf(os.path.join(resultpath,key+".nc"))
-        ds.close()
+        if ds is not None:
+            mean_yield_ds = mean_cv(ds)[0]
+            cv_yield_ds = mean_cv(ds)[1]
+            da_y =  mean_yield_ds
+            da_cv = cv_yield_ds
+            res = sw_date_optimization(da_y, da_cv, ranking)
+            opt_sw = res[0][['lat', 'lon', 'sowing_date']]
+            yield_sw = res[0][['lat', 'lon', 'yield']]
+            opt_sw = opt_sw.set_index(['lat', 'lon']) # set lat and lon as indeces
+            yield_sw = yield_sw.set_index(['lat', 'lon'])
+            result_da = opt_sw.to_xarray() # works with xarray v 0.19.0
+            result_yield = yield_sw.to_xarray()
+            print(f"finished {key}")
+            result_da.to_netcdf(os.path.join(resultpath,key+"_optimsw.nc"))
+            result_yield.to_netcdf(os.path.join(resultpath,key+"_yield.nc"))
+            ds.close()
 
 
 def mean_cv(combine):
@@ -77,18 +83,18 @@ def mean_cv(combine):
     cv_yield_ds = cv_yield_ds.where(~nan_check)
     return mean_yield_ds, cv_yield_ds
 
+
 def comb_data(sowing_dates, work_dir, model):
     all_dataset = []
     sw = []
     for sowing_date in sowing_dates:
+        outfile = glob(os.path.join(work_dir,f'{model}_*_{sowing_date}_2.0.nc'))
             
-       outfile = os.path.join(work_dir,f'{model}_yearly_MgtMil0_{sowing_date}_2.0.nc')
-            
-       if os.path.exists(outfile):
+        if len(outfile)==1:
             sw.append(sowing_date)
 
             # Open the NetCDF dataset for the current sowing date
-            ds = xr.open_dataset(outfile)
+            ds = xr.open_dataset(outfile[0])
             
             #ds = ds.isel(time=slice(None, -1))
             
@@ -142,9 +148,11 @@ def def_opt_sw(overlap):
     """
     if len(overlap) == 1:
         opt_sw = overlap.iloc[0,0]
+        yield_max = overlap.iloc[0,3]
     elif len(overlap) >= 2:
         opt_sw = mean_sw_date(overlap.iloc[0,0], overlap.iloc[1,0])
-    return opt_sw
+        yield_max = max(overlap.iloc[0,3], overlap.iloc[1,3])
+    return opt_sw, yield_max
 
 def sw_date_optimization(da_y, da_cv, ranking):
     """Determines for each pixel if it is possible do two cropping season and it define one or resp. two optimal sowing dates.
@@ -161,9 +169,9 @@ def sw_date_optimization(da_y, da_cv, ranking):
     """
    
     # Initialize empty DataFrames with column names
-    columns1 = ['lat', 'lon', 'sowing_date']
+    columns1 = ['lat', 'lon', 'sowing_date', 'yield']
     result_df_1 = pd.DataFrame(columns=columns1)
-    columns2 = ['lat', 'lon', 'sowing_date_1', 'sowing_date_2']
+    columns2 = ['lat', 'lon', 'sowing_date_1', 'sowing_date_2', 'yield_1', 'yield_2']
     result_df_2 = pd.DataFrame(columns=columns2)
 
     # pixelwise
@@ -176,8 +184,8 @@ def sw_date_optimization(da_y, da_cv, ranking):
             # yield
             da_y_sel = da_y.sel(lat=lat, lon=lon) # select pixel values
             if da_y_sel.isnull().all(): 
-                print("yyyyy", da_y_sel['lat'].values, da_y_sel['lon'].values)
-                scalar_df = pd.DataFrame({'lat': da_y_sel['lat'].values, 'lon': da_y_sel['lon'].values, 'sowing_date': [float('nan')]})
+                #print("yyyyy", da_y_sel['lat'].values, da_y_sel['lon'].values)
+                scalar_df = pd.DataFrame({'lat': da_y_sel['lat'].values, 'lon': da_y_sel['lon'].values, 'sowing_date': [float('nan')], 'yield': [float('nan')]})
                 result_df_1 = pd.concat([result_df_1, scalar_df])
             else:   
                 df_y = da_y_sel.to_dataframe(name='Yield') # change format to df
@@ -207,15 +215,138 @@ def sw_date_optimization(da_y, da_cv, ranking):
                     if overlap.empty:
                         overlap = sw_range_y
                     # decide optimal sowing date
-                    opt_sw = def_opt_sw(overlap) 
+                    opt_sw, yield_max = def_opt_sw(overlap) 
                     # get index for the selection below
                     first_row_name = overlap.index[0]
                     lat_column = [col for col in overlap.columns if 'lat' in col][0]    
                     lon_column = [col for col in overlap.columns if 'lon' in col][0]
-                    scalar_df = pd.DataFrame({'lat': overlap.loc[first_row_name,lat_column], 'lon': overlap.loc[first_row_name,lon_column], 'sowing_date': [opt_sw]})
+                    scalar_df = pd.DataFrame({'lat': overlap.loc[first_row_name,lat_column], 'lon': overlap.loc[first_row_name,lon_column], 'sowing_date': [opt_sw], 'yield': [yield_max]})
                     result_df_1 = pd.concat([result_df_1,scalar_df] )
         
     return result_df_1, result_df_2
 
 
+# I simulate 3 varieties. The ouputs are netcdf files of yield for each variety.
+# I want to generate a netcdf file of variety number where the value is the variety number that gives the highest yield for each pixel.
+# as input I have a list of netcdf files of yield for each variety
 
+
+def best_variety(yield_folder, resultpath):
+    """Determines the best variety for each pixel.
+
+    Args:
+        yield_folder (Path): Path of the folder containing the netcdf files of yield for each variety.
+        resultpath (Path): Path of the folder where the best variety netcdf file will be saved.
+
+    Returns:
+        None: Saves the NetCDF file with the best variety to the resultpath.
+    """
+    # List all NetCDF files in the specified folder
+    yield_files = glob(os.path.join(yield_folder, "*.nc"))
+    print("Yield files:", yield_files)
+
+    # Extract variety IDs from file names
+    variety_ids = [int(os.path.basename(f).split("_")[-1].replace(".nc", "")) for f in yield_files]
+
+    # Load all NetCDF files into xarray DataArrays
+    yield_datasets = [xr.open_dataarray(file) for file in yield_files]
+
+    # Combine the yield DataArrays into a single xarray DataArray along a new "variety" dimension
+    combined_yield = xr.concat(yield_datasets, dim="variety")
+
+    # Assign variety IDs as a coordinate along the "variety" dimension
+    combined_yield = combined_yield.assign_coords(variety=("variety", variety_ids))
+
+    # Identify pixels where all varieties are NaN
+    all_nan_mask = combined_yield.isnull().all(dim="variety")
+
+    # Replace NaN with a placeholder value (-1) for computation purposes
+    combined_yield_filled = combined_yield.fillna(-1)
+
+    # Find the index of the variety with the maximum yield for each pixel
+    max_variety_index = combined_yield_filled.argmax(dim="variety", skipna=True)
+
+    # Map the index to the actual variety ID
+    best_variety_ = combined_yield["variety"].isel(variety=max_variety_index)
+    #best_variety_ = best_variety_.astype(int)
+    # Apply the all-NaN mask to maintain NaN for invalid pixels
+    best_variety = best_variety_.where(~all_nan_mask)
+    
+    
+    # Create a new xarray Dataset to store the best variety data
+    best_variety_dataset = xr.Dataset(
+        {"variety": best_variety},
+        attrs={"description": "Best variety for each pixel based on maximum yield."}
+    )
+
+    # Save the resulting best variety as a new NetCDF file
+    output_file = os.path.join(resultpath, "best_variety.nc")
+    best_variety_dataset.to_netcdf(output_file)
+
+    print(f"NetCDF file '{output_file}' generated successfully!")
+
+
+
+# based on the best cultivar netcdf file, I want to produce a netcdf file of sowing date where pixel value is the sowing date of the corresponding variety
+
+import os
+from glob import glob
+import xarray as xr
+import numpy as np
+
+def sowing_date_from_best_variety(best_variety_file, variety_sowing_folder, resultpath):
+    """Generates a NetCDF file of sowing dates based on the best variety for each pixel.
+
+    Args:
+        best_variety_file (Path): Path to the NetCDF file containing the best variety for each pixel.
+        variety_sowing_folder (Path): Folder of the NetCDF files containing sowing dates for each variety.
+        resultpath (Path): Path to save the resulting NetCDF file of sowing dates.
+
+    Returns:
+        None: Saves the NetCDF file of sowing dates based on the best variety.
+    """
+    # Load the best variety NetCDF file
+    best_variety_data = xr.open_dataarray(best_variety_file)
+
+    # Load the sowing date NetCDF files for each variety
+    variety_sowing_files = glob(os.path.join(variety_sowing_folder, "*.nc"))
+    variety_sowing_data = [xr.open_dataarray(file) for file in variety_sowing_files]
+
+    # Combine the sowing date DataArrays into a single xarray DataArray along a new "variety" dimension
+    combined_sowing = xr.concat(variety_sowing_data, dim="variety")
+
+    # Assign variety IDs as a coordinate along the "variety" dimension
+    variety_ids = [float(f.split("_")[-1].replace(".nc", "")) for f in variety_sowing_files]  # Convert to string
+    combined_sowing = combined_sowing.assign_coords(variety=("variety", variety_ids))
+
+
+    # Mask out invalid (NaN) pixels in best_variety_data
+    valid_pixels_mask = ~np.isnan(best_variety_data)
+    #valid_pixels_mask = best_variety_data.where(best_variety_data_str != "nan", drop=True)
+    #valid_pixels_mask = best_variety_data_str != "nan"
+    best_variety_data_valid = best_variety_data.where(valid_pixels_mask, drop=True)
+    print("valid_pixels_mask", valid_pixels_mask)
+
+    
+    # Map the best variety to the corresponding sowing date for valid pixels only
+    print(combined_sowing["variety"].values)
+    print("Unique values in best_variety_data_str:", np.unique(best_variety_data_valid.values))
+    
+    sowing_date_from_best_variety = combined_sowing.where(combined_sowing.variety.isin(best_variety_data_valid), drop=True)
+    
+    #sowing_date_from_best_variety = combined_sowing.sel(variety=best_variety_data_valid)
+
+    # Reapply the original NaN mask to sowing_date_from_best_variety
+    sowing_date_with_nan = sowing_date_from_best_variety.reindex_like(best_variety_data)
+
+    # Create a new xarray Dataset to store the sowing date data
+    sowing_date_dataset = xr.Dataset(
+        {"sowing_date": sowing_date_with_nan},
+        attrs={"description": "Sowing date based on the best variety for each pixel."}
+    )
+
+    # Save the resulting sowing date as a new NetCDF file
+    output_file = os.path.join(resultpath, "sowing_date_from_best_variety.nc")
+    sowing_date_dataset.to_netcdf(output_file)
+
+    print(f"NetCDF file '{output_file}' generated successfully!")

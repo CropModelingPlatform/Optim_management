@@ -1,4 +1,4 @@
-from .optimizer import optimize
+from .optimizer import optimize, best_variety, sowing_date_from_best_variety
 
 import os, sys
 from pathlib import Path
@@ -25,7 +25,36 @@ def cmd_optimize(modelout, resultpath, start=10, end=365, step=10):
     resultpath: the path of the folder where sowing date netcdf files will be saved
     """
     optimize(modelout, resultpath, start, end, step)
+
+@click.command("bestvar")
+@click.argument("yieldfolder")
+@click.argument("resultpath")
+def cmd_optimvar(yieldfolder, resultpath):
+    """Find the best cultivar from a list of cultivars.
+    
+    yieldfolder: the path of the folder containing the yield data for different cultivars
+    resultpath: the path of the folder where the best cultivars netcdf files will be saved
+    """
+    best_variety(yieldfolder,resultpath)
+    
+@click.command("varsow")
+@click.argument("best_variety_file")
+@click.argument("variety_sowing_folder")
+@click.argument("resultpath")
+def cmd_sowvar(best_variety_file, variety_sowing_folder, resultpath):
+    """Create a sowing date netcdf file based on the cultivar map.
+    
+    best_variety_file: the path of the file containing the best cultivar
+    variety_sowing_folder: the path of the folder containing the sowing date netcdf file for different cultivars
+    
+    resultpath: the path of the folder where the best cultivars netcdf files will be saved
+    """
+    sowing_date_from_best_variety(best_variety_file, variety_sowing_folder, resultpath)
+    
+       
 cli.add_command(cmd_optimize)
+cli.add_command(cmd_optimvar)
+cli.add_command(cmd_sowvar)
 
 if __name__ == "__main__":
     cli()
