@@ -4,11 +4,11 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.portray]
-modules = ["optim_sowingdate"]
+modules = ["optim_management"]
 
 [project]
-name = "optim_sowingdate"
-description = "A package to optimize sowing date from estimated yield time series"
+name = "optim_management"
+description = "A package to optimize agricultural practices from crop model outputs"
 requires-python = ">=3.9"
 readme = "README.md"
 version = "2.6.0"
@@ -65,9 +65,9 @@ click  = "^8.1.7"
 
 
 [project.urls]
-Homepage = "https://github.com/cropmodelingplatform/Optim_sowingDate"
+Homepage = "https://github.com/cropmodelingplatform/Optim_management"
 documentation = "https://Optim_sowingDate.readthedocs.io"
-Repository = "https://github.com/CropModelingPlatform/Optim_sowingDate.git"
+Repository = "https://github.com/CropModelingPlatform/Optim_management.git"
 
 [tool.portray.mkdocs.theme]
 name = "readthedocs"
@@ -75,7 +75,7 @@ palette = {primary = "green", accent = "pink"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-#include = ["optim_sowingdate*"]
+#include = ["optim_management*"]
 
 [tool.portray.mkdocs.theme.icon]
 repo='fontawesome/brands/gitlab'
@@ -84,5 +84,5 @@ repo='fontawesome/brands/gitlab'
 Home = "README.md"
 
 [project.scripts]
-optim_sowingdate = "optim_sowingdate.cmd:cli"
+optim_management = "optim_management.cmd:cli"
 

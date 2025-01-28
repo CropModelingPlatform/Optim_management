@@ -1,6 +1,6 @@
-# Optimal sowing dates estimation
+# Optim Management
 
-A package to estimate optimal sowing dates from crop yield time series
+A package to estimate optimal agricultural practices from srop models outputs
 
 ## Install
 
@@ -8,7 +8,7 @@ A package to estimate optimal sowing dates from crop yield time series
 
         ```bash
         conda create --name gced python=3.9
-        pip install optim_sowingdate
+        pip install optim_management
         ```
 
 ## Usage
@@ -16,5 +16,5 @@ A package to estimate optimal sowing dates from crop yield time series
 It supposed that you have the netcdf files outputs for the models STICS, DSSAT and Celsius in a same folder, estimated thanks to the LIMA platform. We named the absolute path of this folder "ModelOutput", and "resultPath" the path of the result.
 
         ```bash
-        optim_sowingdate optim --start <value> --end <value> --step <value> <ModelOutput> <resultPath>
+        optim_management optim --start <value> --end <value> --step <value> <ModelOutput> <resultPath>
         ```

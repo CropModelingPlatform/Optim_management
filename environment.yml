@@ -1,4 +1,4 @@
-name: optim_sowingdate
+name: optim_management
 channels:
   - conda-forge
 dependencies:

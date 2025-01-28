@@ -1,3 +1,3 @@
 
 def test_optimize():
-    from optim_sowingdate.optimizer import optimize
+    from optim_management.optimizer import optimize
