@@ -37,7 +37,7 @@ classifiers = [
   "Development Status :: 3 - Alpha",
 
   # Indicate who your project is intended for
-  "Intended Audience :: Developers",
+  "Intended Audience :: Crop models users",
   "Topic :: Software Development :: Build Tools",
 
   # Pick your license as you wish
