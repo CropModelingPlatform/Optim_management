@@ -16,9 +16,9 @@ def cli():
 @click.argument("modelout")
 @click.argument("resultpath")
 @click.option("--start", default=10, help="Start date for optimization")
-@click.option("--end", default=365, help="End date for optimization")
+@click.option("--end", default=360, help="End date for optimization")
 @click.option("--step", default=10, help="Step for optimization")
-def cmd_optimize(modelout, resultpath, start=10, end=365, step=10):
+def cmd_optimize(modelout, resultpath, start=10, end=360, step=10):
     """Optimize sowing date for given model outputs.
     
     modelout: the path of the folder containing the model outputs
@@ -35,7 +35,7 @@ def cmd_optimvar(yieldfolder, resultpath):
     yieldfolder: the path of the folder containing the yield data for different cultivars
     resultpath: the path of the folder where the best cultivars netcdf files will be saved
     """
-    best_variety(yieldfolder,resultpath)
+    best_variety(yieldfolder,resultpath) 
     
 @click.command("varsow")
 @click.argument("best_variety_file")

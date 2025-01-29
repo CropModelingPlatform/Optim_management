@@ -221,5 +221,5 @@ def zonal_statistics(shapefile_path, netcdf_path, var_name, years, prefix_output
 shapefile = "D:\Docs\ASSE\output.shp"
 outpath = "D:\Docs\ASSE\output2.shp"
 netcdf_path = "D:\Docs\ASSE\stics_yearly_MgtMil80_1.0.nc"
-from optim_sowingdate import analysis
+from optim_management import analysis
 analysis.zonal_statistics(shapefile, netcdf_path, "Yield", list(range(2001,2015)),  prefix_output_column='est_', outpath=outpath)
