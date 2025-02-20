@@ -263,11 +263,12 @@ def best_variety(yield_folder, resultpath):
     best_variety = best_variety_.where(~all_nan_mask)
     best_variety_dataset = xr.Dataset(
         {"variety": best_variety},
-        attrs={"description": "Best variety for each pixel based on maximum yield."}
+        attrs={"description": "Best variety based on the maximum yield."}
     )
     output_file = os.path.join(resultpath, "best_variety.nc")
     best_variety_dataset.to_netcdf(output_file)
     print(f"NetCDF file '{output_file}' generated successfully!")
+
 
 
 def sowing_date_from_best_variety(best_variety_file, variety_sowing_folder, resultpath):
@@ -279,27 +280,36 @@ def sowing_date_from_best_variety(best_variety_file, variety_sowing_folder, resu
         resultpath (Path): Path to save the resulting NetCDF file of sowing dates.
 
     Returns:
-        None: Saves the NetCDF file of sowing dates based on the best variety.
+        None: Saves the result to `resultpath`.
     """
-    best_variety_data = xr.open_dataarray(best_variety_file)
+    # Load the best variety data
+    best_variety_ds = xr.open_dataset(best_variety_file)
+    best_variety = best_variety_ds['variety']  # Assuming the variable is named 'best_variety'
+    # Initialize an empty array to store the sowing dates
+    sowing_dates = xr.full_like(best_variety, np.nan, dtype=np.float32)
     variety_sowing_files = glob(os.path.join(variety_sowing_folder, "*.nc"))
-    variety_sowing_data = [xr.open_dataarray(file) for file in variety_sowing_files]
-    combined_sowing = xr.concat(variety_sowing_data, dim="variety")
-    variety_ids = [float(f.split("_")[-1].replace(".nc", "")) for f in variety_sowing_files]  # Convert to string
-    combined_sowing = combined_sowing.assign_coords(variety=("variety", variety_ids))
-    valid_pixels_mask = ~np.isnan(best_variety_data)
-    best_variety_data_valid = best_variety_data.where(valid_pixels_mask, drop=True)
-    print(combined_sowing["variety"].values)
-    print("Unique values in best_variety_data_str:", np.unique(best_variety_data_valid.values))
-    sowing_date_from_best_variety = combined_sowing.where(combined_sowing.variety.isin(best_variety_data_valid), drop=True)
-    # Reapply the original NaN mask to sowing_date_from_best_variety
-    sowing_date_with_nan = sowing_date_from_best_variety.reindex_like(best_variety_data)
-    # Create a new xarray Dataset to store the sowing date data
-    sowing_date_dataset = xr.Dataset(
-        {"sowing_date": sowing_date_with_nan},
-        attrs={"description": "Sowing date based on the best variety for each pixel."}
+    # Iterate over each variety's sowing date file
+    for variety_file in variety_sowing_files:
+        variety_ds = xr.open_dataset(variety_file)
+        variety_name = float(variety_file.split("_")[-1].replace(".nc", ""))  # Assuming the variety name is stored in the 'variety' variable
+        # Mask for pixels where the best variety matches the current variety
+        mask = (best_variety == variety_name)
+        if mask.sum()==0 :
+            continue
+        # Assign sowing dates for the matching pixels
+        sowing_dates = sowing_dates.where(~mask, variety_ds['sowing_date'])
+    # Create a new dataset for the result
+    result_ds = xr.Dataset(
+        {
+            'sowing_date': sowing_dates,  # Preserve dimensions
+        },
+        attrs={"description": "Sowing date based on the best variety for each pixel."},
+        coords={
+            'lat': best_variety_ds['lat'],
+            'lon': best_variety_ds['lon'],
+        }
     )
-    # Save the resulting sowing date as a new NetCDF file
+
     output_file = os.path.join(resultpath, "sowing_date_from_best_variety.nc")
-    sowing_date_dataset.to_netcdf(output_file)
+    result_ds.to_netcdf(output_file)
     print(f"NetCDF file '{output_file}' generated successfully!")
