@@ -1,8 +1,8 @@
 Optim Management
 ================
 
-.. image:: https://readthedocs.org/projects/optim_management/badge/?version=latest
-   :target: https://optim_management.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/optim-management/badge/?version=latest
+   :target: https://optim-management.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
 A package to estimate optimal agricultural practices from crop model outputs.
@@ -31,3 +31,7 @@ Run the optimization as follows:
 .. code-block:: bash
 
    optim_management optim --start <value> --end <value> --step <value> <ModelOutput> <resultPath>
+
+Contributions
+-------------
+
