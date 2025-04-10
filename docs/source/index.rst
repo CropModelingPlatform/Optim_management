@@ -1,5 +1,5 @@
 Welcome to Optim Management's documentation!
-======================================
+============================================
 
 .. toctree::
    :maxdepth: 2
