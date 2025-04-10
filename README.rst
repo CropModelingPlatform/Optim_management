@@ -2,7 +2,7 @@ Optim Management
 ================
 
 .. image:: https://readthedocs.org/projects/optim-management/badge/?version=latest
-   :target: https://optim-management.readthedocs.io/en/latest/?badge=latest
+   :target: https://optim-management.readthedocs.io/en/latest/
    :alt: Documentation Status
 
 A package to estimate optimal agricultural practices from crop model outputs.
