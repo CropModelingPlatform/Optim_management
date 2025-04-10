@@ -1,0 +1,30 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Optim_management : A package to estimate optimal agricultural practices from crop model outputs.
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Cyrille Ahmed
+    family-names: Midingoyi
+    affiliation: CIRAD
+    email: cyrille_ahmed.midingoyi@cirad.fr
+  - given-names: Gatien
+    family-names: Falconnier
+    email: gatien.falconnier@cirad.fr
+    affiliation: CIRAD
+
+repository-code: >-
+  https://gitlab.cirad.fr/lima/optim_management/
+url: 'https://optim_management.readthedocs.io/en/latest/?badge=latest'
+abstract: >-
+   A package to estimate optimal agricultural practices from crop model outputs...... 
+keywords:
+  - crop models
+  - simulation
+  - data management
+license: MIT
