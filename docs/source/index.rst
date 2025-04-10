@@ -1,4 +1,4 @@
-Welcome to ModFileGen's documentation!
+Welcome to Optim Management's documentation!
 ======================================
 
 .. toctree::
